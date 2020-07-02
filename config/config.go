@@ -55,7 +55,7 @@ func (c *BasicConfig) Load() ( error ){
 	}
 	err = viper.Unmarshal(&c.App)
 
-	file := fmt.Sprintf("%s-com.yml",c.app.Env )
+	file := fmt.Sprintf("%s-com.yml",c.App.Env )
 	viper.SetConfigName(file)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(c.Arg.ConfigPath)
@@ -111,7 +111,7 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 	}
 	mws.Logger = logger
 	cfg := c
-	zipkinURL := fmt.Sprintf("http://%s:%d%s", cfg.com.Zipkin.Host, cfg.com.Zipkin.Port, cfg.com.Zipkin.Api)
+	zipkinURL := fmt.Sprintf("http://%s:%d%s", cfg.Com.Zipkin.Host, cfg.Com.Zipkin.Port, cfg.Com.Zipkin.Api)
 	mws.ZipkinURL = zipkinURL
 
 	var zipkinTracer *zipkin.Tracer
@@ -120,7 +120,7 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 			var (
 				err      error
 
-				hostPort = fmt.Sprintf("%s:%d", cfg.com.Zipkin.Host, cfg.com.Zipkin.Port)
+				hostPort = fmt.Sprintf("%s:%d", cfg.Com.Zipkin.Host, cfg.Com.Zipkin.Port)
 				reporter = zipkinhttp.NewReporter(zipkinURL)
 			)
 
@@ -169,7 +169,7 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 
 		} else if cfg.Com.Appdashot.Port != 0 {
 			logger.Log("tracer", "Appdash", "addr", cfg.Com.Appdashot.Port)
-			apphost := fmt.Sprintf("%s:%d", cfg.com.Appdashot.Host, cfg.com.Appdashot.Port)
+			apphost := fmt.Sprintf("%s:%d", cfg.Com.Appdashot.Host, cfg.Com.Appdashot.Port)
 			tracer = appdashot.NewTracer(appdash.NewRemoteCollector(apphost))
 		} else {
 			tracer = stdopentracing.GlobalTracer() // no-op
@@ -187,9 +187,9 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 
 func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
 	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=%s&charset=%s",
-		c.com.DB.Username, c.com.DB.Password,
-		c.com.DB.Host, c.com.DB.Port,
-		c.com.DB.Database, c.com.DB.ParseTime, c.com.DB.Charset)
+		c.Com.DB.Username, c.Com.DB.Password,
+		c.Com.DB.Host, c.Com.DB.Port,
+		c.Com.DB.Database, c.Com.DB.ParseTime, c.Com.DB.Charset)
 	db, err = gorm.Open("mysql", dataSource)
 	c.Bb = db
 	return db, err

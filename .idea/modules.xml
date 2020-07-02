@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../agokit/.idea/gokitframework.iml" filepath="$PROJECT_DIR$/../agokit/.idea/gokitframework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../agokit/.idea/agokit.iml" filepath="$PROJECT_DIR$/../agokit/.idea/agokit.iml" />
     </modules>
   </component>
 </project>

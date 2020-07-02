@@ -1,12 +1,13 @@
 language: go
 
 go:
-  - 1.13.x
-  - 1.14.x
+  - 1.5
+  - 1.6
+  - 1.7.1
   - tip
 
 install:
-  - go install golang.org/x/lint/golint
-
+  - go get -d -t ./...
+  - go get -u github.com/golang/lint/...
 script:
   - make test vet lint bench
