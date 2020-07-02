@@ -1,6 +1,6 @@
 package config
 
-type Arg struct {
+type Args struct {
 	ConfigPath string
 	LanguagePath string
 }

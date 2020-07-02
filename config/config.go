@@ -29,41 +29,41 @@ type Config interface {
 //New Config is  to set params
 func New(basePath string) (Config , error){
 	c := BasicConfig{}
-	flag.StringVar(&c.arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
-	flag.StringVar(&c.arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
- 	c.app.BasePath = basePath
+	flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
+	flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
+ 	c.App.BasePath = basePath
 	err:= c.Load()
 	return &c, err
 }
 
 type BasicConfig struct {
-	arg Arg
-	app App
-	com Com
-	mws Middlewares
-	db  *gorm.DB
+	Arg Args
+	App Application
+	Com Component
+	Mws Middlewares
+	Bb  *gorm.DB
 }
 
 //Load config from app.yml file
 func (c *BasicConfig) Load() ( error ){
 	viper.SetConfigName("app.yml")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(c.arg.ConfigPath)
+	viper.AddConfigPath(c.Arg.ConfigPath)
 	err := viper.ReadInConfig()
 	if err != nil {
 		return err
 	}
-	err = viper.Unmarshal(&c.app)
+	err = viper.Unmarshal(&c.App)
 
 	file := fmt.Sprintf("%s-com.yml",c.app.Env )
 	viper.SetConfigName(file)
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath(c.arg.ConfigPath)
+	viper.AddConfigPath(c.Arg.ConfigPath)
 	err = viper.ReadInConfig()
 	if err != nil {
 		return err
 	}
-	err = viper.Unmarshal(&c.com)
+	err = viper.Unmarshal(&c.Com)
 	return  err
 }
 
@@ -71,22 +71,22 @@ func (c *BasicConfig) Load() ( error ){
 func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 	fieldKeys := []string{"method", "error"}
 	mws.RequestCount = kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
-		Namespace: c.app.Name,
-		Subsystem: c.app.Service,
+		Namespace: c.App.Name,
+		Subsystem: c.App.Service,
 		Name:      "request_count",
 		Help:      "Number of requests received.",
 	}, fieldKeys)
 
 	mws.RequestLatency = kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-		Namespace: c.app.Name,
-		Subsystem: c.app.Service,
+		Namespace: c.App.Name,
+		Subsystem: c.App.Service,
 		Name:      "request_latency_microseconds",
 		Help:      "Total duration of requests in microseconds.",
 	}, fieldKeys)
 
 	mws.CountResult = kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-		Namespace: c.app.Name,
-		Subsystem: c.app.Service,
+		Namespace: c.App.Name,
+		Subsystem: c.App.Service,
 		Name:      "count_result",
 		Help:      "The result of each count method.",
 	}, []string{}) // no fields here
@@ -95,8 +95,8 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 	{
 		// Endpoint-level metrics.
 		duration = kitprometheus.NewSummaryFrom(stdprometheus.SummaryOpts{
-			Namespace: c.app.Name,
-			Subsystem: c.app.Service,
+			Namespace: c.App.Name,
+			Subsystem: c.App.Service,
 			Name:      "request_duration_seconds",
 			Help:      "Request duration in seconds.",
 		}, []string{"method", "success"})
@@ -124,16 +124,16 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 				reporter = zipkinhttp.NewReporter(zipkinURL)
 			)
 
-			logger.Log("Servicename", cfg.app.Service)
+			logger.Log("Servicename", cfg.App.Service)
 
 			mws.Reporter = reporter
-			zEP, _ := zipkin.NewEndpoint(cfg.app.Service, hostPort)
+			zEP, _ := zipkin.NewEndpoint(cfg.App.Service, hostPort)
 			zipkinTracer, err = zipkin.NewTracer(reporter, zipkin.WithLocalEndpoint(zEP))
 			if err != nil {
 				logger.Log("err", err)
 				os.Exit(1)
 			}
-			if !(cfg.com.Zipkin.Bridge) {
+			if !(cfg.Com.Zipkin.Bridge) {
 				logger.Log("tracer", "Zipkin", "type", "Native", "URL", zipkinURL)
 			}
 		}
@@ -144,18 +144,18 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 	// components that use it, as a dependency.
 	var tracer stdopentracing.Tracer
 	{
-		if cfg.com.Zipkin.Bridge && zipkinTracer != nil {
+		if cfg.Com.Zipkin.Bridge && zipkinTracer != nil {
 			logger.Log("tracer", "Zipkin", "type", "OpenTracing", "URL", zipkinURL)
 			tracer = zipkinot.Wrap(zipkinTracer)
 			zipkinTracer = nil // do not instrument with both native tracer and opentracing bridge
-		} else if cfg.com.Lightstep.Token != "" {
+		} else if cfg.Com.Lightstep.Token != "" {
 			logger.Log("tracer", "LightStep") // probably don't want to print out the token :)
 			lightStepTracer := lightstep.NewTracer(lightstep.Options{
 				Collector:   lightstep.Endpoint{},
-				AccessToken: cfg.com.Lightstep.Token,
+				AccessToken: cfg.Com.Lightstep.Token,
 				Tags: map[string]interface{}{
-					lightstep.ComponentNameKey: cfg.app.Service,
-					"service.version":          cfg.app.Version,
+					lightstep.ComponentNameKey: cfg.App.Service,
+					"service.version":          cfg.App.Version,
 				},
 			})
 			stdopentracing.SetGlobalTracer(lightStepTracer)
@@ -167,8 +167,8 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 
 			mws.LightstepTracer = lightStepTracer
 
-		} else if cfg.com.Appdashot.Port != 0 {
-			logger.Log("tracer", "Appdash", "addr", cfg.com.Appdashot.Port)
+		} else if cfg.Com.Appdashot.Port != 0 {
+			logger.Log("tracer", "Appdash", "addr", cfg.Com.Appdashot.Port)
 			apphost := fmt.Sprintf("%s:%d", cfg.com.Appdashot.Host, cfg.com.Appdashot.Port)
 			tracer = appdashot.NewTracer(appdash.NewRemoteCollector(apphost))
 		} else {
@@ -178,9 +178,9 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 
 	mws.Tracer = tracer
 
-	mws.Locale = i18n.New(c.arg.LanguagePath, c.app.AcceptLanguage)
+	mws.Locale = i18n.New(c.Arg.LanguagePath, c.App.AcceptLanguage)
 
-	c.mws = mws
+	c.Mws = mws
 
 	return mws
 }
@@ -191,6 +191,6 @@ func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
 		c.com.DB.Host, c.com.DB.Port,
 		c.com.DB.Database, c.com.DB.ParseTime, c.com.DB.Charset)
 	db, err = gorm.Open("mysql", dataSource)
-	c.db = db
+	c.Bb = db
 	return db, err
 }

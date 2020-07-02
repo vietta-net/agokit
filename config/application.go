@@ -1,6 +1,6 @@
 package config
 
-type App struct {
+type Application struct {
 	Name string 		`yaml:"name" json:"name"`
 	Service string 		`yaml:"service" json:"service"`
 	Version string 		`yaml:"version" json:"version"`

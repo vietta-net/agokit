@@ -1,6 +1,6 @@
 package config
 
-type Com struct {
+type Component struct {
 	DB struct {
 		Host      string `yaml:"host"`
 		Port      uint16 `yaml:"port"`
