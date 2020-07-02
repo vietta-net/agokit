@@ -1,4 +1,4 @@
-module agokit
+module github.com/vietta-net/agokit
 
 go 1.14
 

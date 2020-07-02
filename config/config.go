@@ -12,7 +12,7 @@ import (
 	zipkinhttp "github.com/openzipkin/zipkin-go/reporter/http"
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/viper"
-	"agokit/i18n"
+	"github.com/vietta-net/agokit/i18n"
 	"os"
 	appdashot "sourcegraph.com/sourcegraph/appdash/opentracing"
 	"github.com/lightstep/lightstep-tracer-go"
