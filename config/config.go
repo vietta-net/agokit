@@ -22,16 +22,18 @@ import (
 )
 
 type Config interface {
-	Load() (error)
+	LoadDB() (db *gorm.DB, err error)
+	LoadMiddlewares() (mws Middlewares)
 }
 
 //New Config is  to set params
-func New(basePath string) Config {
+func New(basePath string) (Config , error){
 	c := BasicConfig{}
 	flag.StringVar(&c.arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
 	flag.StringVar(&c.arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
  	c.app.BasePath = basePath
-	return &c
+	err:= c.Load()
+	return &c, err
 }
 
 type BasicConfig struct {
@@ -39,6 +41,7 @@ type BasicConfig struct {
 	app App
 	com Com
 	mws Middlewares
+	db  *gorm.DB
 }
 
 //Load config from app.yml file
@@ -188,5 +191,6 @@ func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
 		c.com.DB.Host, c.com.DB.Port,
 		c.com.DB.Database, c.com.DB.ParseTime, c.com.DB.Charset)
 	db, err = gorm.Open("mysql", dataSource)
+	c.db = db
 	return db, err
 }
