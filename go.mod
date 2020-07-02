@@ -7,6 +7,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-kit/kit v0.8.0
 	github.com/ilyakaznacheev/cleanenv v1.2.4 // indirect
+	github.com/jinzhu/gorm v1.9.14
 	github.com/lightstep/lightstep-tracer-go v0.20.0
 	github.com/nicksnyder/go-i18n/v2 v2.0.3
 	github.com/opentracing/basictracer-go v1.1.0 // indirect

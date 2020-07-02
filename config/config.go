@@ -17,6 +17,8 @@ import (
 	appdashot "sourcegraph.com/sourcegraph/appdash/opentracing"
 	"github.com/lightstep/lightstep-tracer-go"
 	"sourcegraph.com/sourcegraph/appdash"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 type Config interface {
@@ -178,4 +180,13 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 	c.mws = mws
 
 	return mws
+}
+
+func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=%s&charset=%s",
+		c.com.DB.Username, c.com.DB.Password,
+		c.com.DB.Host, c.com.DB.Port,
+		c.com.DB.Database, c.com.DB.ParseTime, c.com.DB.Charset)
+	db, err = gorm.Open("mysql", dataSource)
+	return db, err
 }
