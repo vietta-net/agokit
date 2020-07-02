@@ -7,7 +7,7 @@ import (
 	"github.com/openzipkin/zipkin-go"
 	"github.com/openzipkin/zipkin-go/reporter"
  	"github.com/go-kit/kit/metrics"
-	"agokit/i18n"
+	"github.com/vietta-net/agokit"
 )
 
 type Middlewares struct {
