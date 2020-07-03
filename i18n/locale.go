@@ -1,11 +1,13 @@
 package i18n
 
 import (
-"fmt"
-"github.com/BurntSushi/toml"
-stdi18n "github.com/nicksnyder/go-i18n/v2/i18n"
-"golang.org/x/text/language"
-
+	"fmt"
+	"github.com/BurntSushi/toml"
+	stdi18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
+	grpctransport "github.com/go-kit/kit/transport/grpc"
+	"google.golang.org/grpc/metadata"
+	"context"
 	"os"
 )
 var (
@@ -92,3 +94,30 @@ func FileExists(filename string) bool {
 	return !info.IsDir()
 }
 
+func GRPCClientlanguage(lang string) grpctransport.ClientRequestFunc {
+	return func(ctx context.Context, md *metadata.MD) context.Context {
+		(*md)["content-language"] = []string{lang}
+		ctx = context.WithValue(ctx, "content-language", lang)
+		return ctx
+	}
+}
+
+
+// GRPCToContext moves a JWT from grpc metadata to context. Particularly
+// userful for servers.
+func LanguageToContext(i18N locale) grpctransport.ServerRequestFunc {
+	return func(ctx context.Context, md metadata.MD) context.Context {
+		// capital "Key" is illegal in HTTP/2.
+		languageHeader, ok := md["content-language"]
+		if !ok {
+			return ctx
+		}
+
+		lang := languageHeader[0]
+
+		i18N.SetLanguage(lang)
+
+		ctx = context.WithValue(ctx, "content-language", lang)
+		return ctx
+	}
+}
