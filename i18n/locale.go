@@ -106,7 +106,7 @@ func GRPCClientlanguage(lang string) grpctransport.ClientRequestFunc {
 
 // GRPCToContext moves a JWT from grpc metadata to context. Particularly
 // userful for servers.
-func LanguageToContext(i18N locale) grpctransport.ServerRequestFunc {
+func LanguageToContext(i18N Locale) grpctransport.ServerRequestFunc {
 	return func(ctx context.Context, md metadata.MD) context.Context {
 		// capital "Key" is illegal in HTTP/2.
 		languageHeader, ok := md["content-language"]
