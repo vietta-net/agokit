@@ -44,8 +44,20 @@ type BasicConfig struct {
 	Bb  *gorm.DB
 }
 
+func FileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+		return false
+	}
+	return !info.IsDir()
+}
+
 //Load config from app.yml file
 func (c *BasicConfig) Load() ( error ){
+	AppFile := fmt.Sprintf("%s/app.yml", c.Arg.ConfigPath)
+	if ! FileExists(AppFile) {
+		panic(AppFile + " is not existed")
+	}
 	viper.SetConfigName("app.yml")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(c.Arg.ConfigPath)
@@ -56,6 +68,12 @@ func (c *BasicConfig) Load() ( error ){
 	err = viper.Unmarshal(&c.App)
 
 	file := fmt.Sprintf("%s-com.yml",c.App.Env )
+	ComFile := fmt.Sprintf("%s/%s", c.Arg.ConfigPath, file)
+
+	if ! FileExists(ComFile) {
+		panic(ComFile + " is not existed")
+	}
+
 	viper.SetConfigName(file)
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(c.Arg.ConfigPath)
