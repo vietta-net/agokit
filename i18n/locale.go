@@ -10,6 +10,7 @@ import (
 	"context"
 	"os"
 )
+
 var (
 	defaultLanguage = "en"
 	defaultAcceptLanguage = "en, en-US, vi"
