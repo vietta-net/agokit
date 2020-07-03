@@ -32,7 +32,7 @@ func New(basePath string) (Config , error){
 	c := BasicConfig{}
 	f.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
 	f.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
-	f.Parse(os.Args[1:])
+
 	c.App.BasePath = basePath
 	err:= c.Load()
 	return &c, err
