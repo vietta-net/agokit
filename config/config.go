@@ -28,10 +28,12 @@ type Config interface {
 
 //New Config is  to set params
 func New(basePath string) (Config , error){
+	f := flag.NewFlagSet("config-path", 1)
 	c := BasicConfig{}
-	flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
-	flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
- 	c.App.BasePath = basePath
+	f.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
+	f.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
+	f.Parse(os.Args[1:])
+	c.App.BasePath = basePath
 	err:= c.Load()
 	return &c, err
 }
