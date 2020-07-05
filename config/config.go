@@ -31,8 +31,8 @@ func New(basePath string) (Config , error){
 
 	c := BasicConfig{}
 	flag.StringVar(&c.Arg.BasePath, "base-path", basePath, "Base Path")
-	flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%sconfigs", basePath), "Config Path")
-	flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%slanguages", basePath), "Language Path")
+	flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%s/configs", basePath), "Config Path")
+	flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%s/languages", basePath), "Language Path")
 	flag.Parse()
 
 	c.App.BasePath = c.Arg.BasePath
