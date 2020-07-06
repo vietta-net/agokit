@@ -30,11 +30,11 @@ type Config interface {
 func New(basePath string) (Config , error){
 
 	c := BasicConfig{}
+	flag.UintVar(&c.Arg.Mode, "mode", 0, "Mode")
 	flag.StringVar(&c.Arg.BasePath, "base-path", basePath, "Base Path")
 	flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%s/configs", basePath), "Config Path")
 	flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%s/languages", basePath), "Language Path")
 	flag.Parse()
-
 	c.App.BasePath = c.Arg.BasePath
 	err:= c.Load()
 	return &c, err
@@ -46,6 +46,7 @@ type BasicConfig struct {
 	Com Component
 	Mws Middlewares
 	Bb  *gorm.DB
+
 }
 
 func FileExists(filename string) bool {
