@@ -1,7 +1,7 @@
 package sql
 
 import (
-	"agokit/helper"
+	"github.com/vietta-net/agokit/helper"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
