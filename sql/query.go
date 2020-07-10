@@ -1,7 +1,7 @@
 package sql
 
 import (
-	"encoding/json"
+	"agokit/helper"
 	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -13,8 +13,7 @@ import (
 func BuildWhereFilter(resultOrm *gorm.DB, filter interface{}) ( *gorm.DB){
 	var data = make(map[string]interface{})
 	//Convert Struct to map
-	jData, _ := json.Marshal(filter)
-	json.Unmarshal(jData, &data)
+	helper.Convert(filter,  &data)
 
 	var where = make(map[string]interface{})
 
