@@ -61,7 +61,7 @@ func BuildWhereSearch(searchFields []string, keyword string) (string, []interfac
 }
 
 func GetPagination(resultOrm *gorm.DB, currentPage uint32) (interface{}, error){
-	p := Pagination{
+	p := &Pagination{
 		Count : 0,
 		Pages: 0,
 		Page: currentPage,
