@@ -60,10 +60,14 @@ func BuildWhereSearch(searchFields []string, keyword string) (string, []interfac
 }
 
 func GetPagination(resultOrm *gorm.DB, currentPage uint32, limit uint32) (interface{}, error){
+	if currentPage < 1 {
+		currentPage = 1
+	}
 	p := &Pagination{
 		Count : 0,
 		Pages: 0,
 		Page: currentPage,
+		Limit: limit,
 	}
 	//Count Rows Total
 	err := resultOrm.Count(&p.Count).Error
