@@ -14,6 +14,7 @@ require (
 	github.com/openzipkin/zipkin-go v0.2.2
 	github.com/prometheus/client_golang v1.7.1
 	github.com/spf13/viper v1.7.0
+	github.com/stretchr/testify v1.4.0
 	golang.org/x/text v0.3.3
 	google.golang.org/grpc v1.26.0
 	google.golang.org/protobuf v1.23.0
