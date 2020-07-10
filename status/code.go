@@ -2,6 +2,14 @@ package status
 
 type Code string
 
+func (c Code) String() string {
+	return string(c)
+}
+
+func (c Code) Equal(s string) bool {
+	return string(c) == s
+}
+
 func (c Code) Name() string {
 	switch c {
 	case "1":

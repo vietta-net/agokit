@@ -5,6 +5,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestEqual(t *testing.T) {
+	assert.Equal(t, Draft.String(), "1")
+}
+
+func TestString(t *testing.T) {
+	assert.Equal(t, Draft.Equal("1"), true)
+}
+
 func TestName(t *testing.T) {
 	assert.Equal(t, "Draft"		, Code("1").Name())
 	assert.Equal(t, "Deleted"		, Code("3").Name())
