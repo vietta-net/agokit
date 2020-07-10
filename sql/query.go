@@ -60,7 +60,7 @@ func BuildWhereSearch(searchFields []string, keyword string) (string, []interfac
 	return whereString, args
 }
 
-func GetPagination(resultOrm *gorm.DB, currentPage uint32, limit uint32) (*Pagination, error){
+func GetPagination(resultOrm *gorm.DB, currentPage uint32, limit uint32) (interface{}, error){
 	p := &Pagination{
 		Count : 0,
 		Pages: 0,
