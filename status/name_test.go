@@ -6,11 +6,16 @@ import (
 )
 
 func TestEqual(t *testing.T) {
-	assert.Equal(t, Draft.String(), "1")
+
+	assert.Equal(t, Draft.Equal("1"), true)
+}
+
+func TestNotEqual(t *testing.T) {
+	assert.Equal(t, Draft.NotEqual("2"), true)
 }
 
 func TestString(t *testing.T) {
-	assert.Equal(t, Draft.Equal("1"), true)
+	assert.Equal(t, Draft.String(), "1")
 }
 
 func TestName(t *testing.T) {

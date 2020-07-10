@@ -7,7 +7,11 @@ func (c Code) String() string {
 }
 
 func (c Code) Equal(s string) bool {
-	return string(c) == s
+	return c.String() == s
+}
+
+func (c Code) NotEqual(s string) bool {
+	return c.String() != s
 }
 
 func (c Code) Name() string {
