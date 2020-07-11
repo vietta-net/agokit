@@ -1,0 +1,15 @@
+syntax = "proto3";
+package masterdata;
+
+option go_package =  "github.com/vietta-net/agokit/proto";
+
+message Pagination{
+   //A number of items are counted
+   uint32 count = 1;
+   //Number of items per page
+   uint32 limit = 2;
+   //Number of pages to show = round up (count / show)
+   uint32 pages = 3;
+   //Current_page and by default = 1
+   uint32 page = 4;
+}
