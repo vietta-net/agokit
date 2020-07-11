@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package error;
 
-option go_package = "github.com/vietta-net/agokit/error";
+option go_package = "agokit/errors";
 
 message Error {
   string message = 1;

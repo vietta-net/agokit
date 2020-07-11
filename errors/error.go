@@ -3,7 +3,7 @@
 // (https://github.com/upspin/upspin/blob/master/errors/errors.go) and then
 // modified.
 
-package error
+package errors
 
 // populateStack uses the runtime to populate the Error's stack struct with
 import (
