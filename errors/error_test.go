@@ -2,6 +2,7 @@ package errors
 
 import (
 	"errors"
+	"google.golang.org/grpc/codes"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -18,6 +19,8 @@ func TestError(t *testing.T) {
 		require.Equal(tt, "it is borked: is it borked?", e.Error())
 		require.Equal(tt, uint32(404), e.(*Error).Code)
 
+		e = E( codes.OK)
+		require.Equal(tt, uint32(0), e.(*Error).Code)
 	})
 }
 

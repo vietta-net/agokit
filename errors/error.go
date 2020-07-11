@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"runtime"
 	"strings"
+	"google.golang.org/grpc/codes"
 )
 
 
@@ -19,6 +20,9 @@ var (
 	_ error = &Error{}
 
 )
+func (e *Error) SetCode(code codes.Code)  {
+	e.Code = uint32(code)
+}
 
 // Error implements the error interface.
 func (e *Error) Error() string {
@@ -54,6 +58,8 @@ func E(args ...interface{}) error {
 		case string:
 			pad(b, ": ")
 			b.WriteString(arg)
+		case codes.Code:
+			e.Code = uint32(arg)
 		case int32:
 			e.Code = uint32(arg)
 		case int:
@@ -169,3 +175,4 @@ func pad(b *bytes.Buffer, str string) {
 	}
 	b.WriteString(str)
 }
+
