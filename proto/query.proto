@@ -1,16 +1,15 @@
 syntax = "proto3";
-package masterdata;
+package proto;
 
-option go_package =   "github.com/vietta-net/agokit/proto";
+option go_package =   "agokit/proto";
 
 message Query{
     //Number of Items per page
-    uint32 limit     = 1;
+    uint32 limit    = 1;
     //Current page, by default = 1
     uint32 page     = 2;
     //Keyword to search  by string contains in name, description
     string keyword  = 3;
-
     //Order by string
     string order    =  4;
 }

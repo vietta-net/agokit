@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+package proto;
+
+option go_package =   "agokit/proto";
+
+message Filter{
+  //Max length 32
+  string code               = 1;
+  //length 36 uuid
+  string parent             = 2;
+  //Max length 3
+  map<string, string> group = 3;
+  //Max length 3
+  map<string, string> type  = 4;
+  //Filter From Date to Date
+  DateRange date            = 5;
+}
+
+message DateRange {
+  google.protobuf.Timestamp from  = 1;
+  google.protobuf.Timestamp to    = 2;
+}

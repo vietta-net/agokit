@@ -1,7 +1,7 @@
 syntax = "proto3";
 package masterdata;
 
-option go_package =  "github.com/vietta-net/agokit/proto";
+option go_package =  "agokit/proto";
 
 message Pagination{
    //A number of items are counted
