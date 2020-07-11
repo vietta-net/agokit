@@ -60,6 +60,8 @@ func E(args ...interface{}) error {
 			b.WriteString(arg)
 		case codes.Code:
 			e.Code = uint32(arg)
+		case map[string]string:
+			e.NestedErrors = arg
 		case int32:
 			e.Code = uint32(arg)
 		case int:

@@ -21,6 +21,12 @@ func TestError(t *testing.T) {
 
 		e = E( codes.OK)
 		require.Equal(tt, uint32(0), e.(*Error).Code)
+
+		var errs = make(map[string]string)
+		errs["Name"] = "Name should not empty!"
+		e = E( codes.OK, errs)
+		require.Equal(tt, uint32(0), e.(*Error).Code)
+		require.Equal(tt, 1, len(e.(*Error).NestedErrors))
 	})
 }
 
