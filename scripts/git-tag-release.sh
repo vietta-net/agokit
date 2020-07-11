@@ -5,7 +5,7 @@ cd ..
 #Get the highest tag number
 #VERSION=`git describe --abbrev=0 --tags`
 VERSION=`git ls-remote --tags --refs --sort="version:refname" git://github.com/vietta-net/agokit.git | awk -F/ 'END{print$NF}'`
-VERSION=${VERSION:-'0.0.0'}
+VERSION=${VERSION:-'0.1.0'}
 
 #Get number parts
 MAJOR="${VERSION%%.*}"; VERSION="${VERSION#*.}"
@@ -20,7 +20,7 @@ GIT_COMMIT=`git rev-parse HEAD`
 NEEDS_TAG=`git describe --contains $GIT_COMMIT`
 
 #Create new tag
-NEW_TAG="$MAJOR.$MINOR.$PATCH"
+NEW_TAG="v$MAJOR.$MINOR.$PATCH"
 echo "Updating to $NEW_TAG"
 
 #Only tag if no tag already (would be better if the git describe command above could have a silent option)
