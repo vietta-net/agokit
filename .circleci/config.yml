@@ -1,0 +1,20 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:latest
+    working_directory: /go/src/agokit
+    steps:
+      - checkout
+      - run:
+          name: Download Packages
+          command: |
+            go get -v -t -d ./...
+      - run:
+          name: Download Vendor
+          command: |
+            go mod vendor
+      - run:
+          name: Test
+          command: |
+            go test -v ./...
