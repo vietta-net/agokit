@@ -10,23 +10,22 @@ MAJOR="${VERSION%%.*}"; VERSION="${VERSION#*.}"
 MINOR="${VERSION%%.*}"; VERSION="${VERSION#*.}"
 PATCH="${VERSION%%.*}"; VERSION="${VERSION#*.}"
 
-#Increase version
-PATCH=$((PATCH+1))
-
 #Get current hash and see if it already has a tag
 GIT_COMMIT=`git rev-parse HEAD`
 NEEDS_TAG=`git describe --contains $GIT_COMMIT`
 
-#Create new tag
-NEW_TAG="$MAJOR.$MINOR.$PATCH"
-echo "Updating to $NEW_TAG"
-
 #Only tag if no tag already (would be better if the git describe command above could have a silent option)
 if [ -z "$NEEDS_TAG" ]; then
-  echo "Tagged with $NEW_TAG (Ignoring fatal:cannot describe - this means commit is untagged) "
+    #Increase version
+    PATCH=$((PATCH+1))
+    #Create new tag
+    NEW_TAG="$MAJOR.$MINOR.$PATCH"
     git tag "$NEW_TAG" -m "Release $NEW_TAG"
+    echo "Updating to $NEW_TAG"
     git push origin "$NEW_TAG"
+    echo "Push"
     git push
 else
-    echo "Already a tag on this commit"
+    VERSION="$MAJOR.$MINOR.$PATCH"
+    echo "Already a tag (version $VERSION) on this commit"
 fi
