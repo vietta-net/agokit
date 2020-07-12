@@ -1,7 +1,9 @@
 package helper
 
 import (
+	"github.com/vietta-net/agokit/pb"
 	"encoding/json"
+	"time"
 )
 
 func Convert(from interface{}, to interface{}) (err error) {
@@ -10,5 +12,10 @@ func Convert(from interface{}, to interface{}) (err error) {
 	return err
 }
 
+func ToDateRange(data interface{}) (*pb.DateRange, error){
+	date := pb.DateRange{}
+	err := Convert(data,  &date)
+	return &date,err
+}
 
 
