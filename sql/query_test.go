@@ -4,6 +4,7 @@ import (
 	"github.com/guregu/null"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"github.com/vietta-net/agokit/pb"
+
 	"github.com/vietta-net/agokit/sql"
 	"testing"
 	"github.com/stretchr/testify/assert"
@@ -42,21 +43,37 @@ func TestBuildWhereDateRange(t *testing.T) {
 
 	to := user.CreatedAt.Add(time.Hour * 24)
 
-	date := &pb.DateRange{
-		From: &timestamppb.Timestamp{
-			Seconds: from.Unix(),
-			Nanos:   0,
-		},
-		To: &timestamppb.Timestamp{
-			Seconds: to.Unix(),
-			Nanos:   0,
+	query := pb.Query{
+		Dates: []*pb.DateRange{
+			{
+				From: &timestamppb.Timestamp{
+					Seconds: from.Unix(),
+					Nanos:   0,
+				},
+				To: &timestamppb.Timestamp{
+					Seconds: to.Unix(),
+					Nanos:   0,
+				},
+			},
+			{
+				From: &timestamppb.Timestamp{
+					Seconds: from.Unix(),
+					Nanos:   0,
+				},
+				To: &timestamppb.Timestamp{
+					Seconds: to.Unix(),
+					Nanos:   0,
+				},
+				Field: "updated_at",
+			},
 		},
 	}
+
 	resultOrm := db.Model(&user )
 	timezone  := "Asia/Ho_Chi_Minh"
 
 	resultOrm.Where("id = ?", user.ID)
-	resultOrm, err = sql.BuildWhereDateRange(resultOrm, date, timezone)
+	resultOrm, err = sql.BuildWhereDateRanges(resultOrm, query.Dates, timezone)
 	assert.Nil(t, err)
 
 	var results = []User{}

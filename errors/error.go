@@ -7,22 +7,36 @@ package errors
 
 // populateStack uses the runtime to populate the Error's stack struct with
 import (
+	"github.com/vietta-net/agokit/helper"
 	"bytes"
 	"fmt"
+	"google.golang.org/grpc/codes"
 	"runtime"
 	"strings"
-	"google.golang.org/grpc/codes"
 )
 
 
 // assert Error implements the error interface.
 var (
 	_ error = &Error{}
-
+	_ helper.Copy = &Error{}
 )
+
+func (e *Error) To(data interface{}) (err error)  {
+	err = helper.Convert(e, &data)
+	return err
+}
+
+func (e *Error) From(data interface{}) (err error)  {
+	err = helper.Convert(data, &e)
+	return err
+}
+
 func (e *Error) SetCode(code codes.Code)  {
 	e.Code = uint32(code)
 }
+
+
 
 // Error implements the error interface.
 func (e *Error) Error() string {

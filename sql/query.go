@@ -93,12 +93,34 @@ func GetPagination(resultOrm *gorm.DB, currentPage uint32, limit uint32) (interf
 	return p, err
 }
 
+func BuildWhereDateRanges(resultOrm *gorm.DB, data interface{}, timezone string) ( *gorm.DB, error) {
+	var err error = nil
+	dates := []pb.DateRange{}
+	helper.Convert(data, dates)
 
-func BuildWhereDateRange(resultOrm *gorm.DB, d *pb.DateRange, timezone string) ( *gorm.DB, error) {
+	for _, date := range dates {
+		resultOrm, err =  BuildWhereDateRange(resultOrm, date, timezone)
+		if err != nil {
+			return resultOrm, err
+		}
+	}
+	return resultOrm, err
+}
+
+func BuildWhereDateRange(resultOrm *gorm.DB, date interface{}, timezone string) ( *gorm.DB, error) {
 	var err error = nil
 	var dateFrom = ""
 	var dateTo = ""
-	if d == nil || (d.From ==nil &&  d.To == nil) {
+
+	d := pb.DateRange{}
+
+	err = helper.Convert(date, &d)
+
+	if err != nil {
+		return resultOrm, errors.E(codes.Unknown, "Convert", err)
+	}
+
+	if d.From ==nil &&  d.To == nil {
 		return resultOrm, nil
 	}
 
@@ -135,7 +157,11 @@ func BuildWhereDateRange(resultOrm *gorm.DB, d *pb.DateRange, timezone string) (
 	//Add one day
 	dateTo 	 = to.In(loc).Add(time.Hour * 24).String()
 
-	resultOrm = resultOrm.Where("`created_at` >= ? AND `created_at` < ?", dateFrom, dateTo)
+	if d.Field == "" {
+		d.Field = "created_at"
+	}
+
+	resultOrm = resultOrm.Where(fmt.Sprintf("`%s` >= ? AND `%s` < ?", d.Field, d.Field), dateFrom, dateTo)
 
 	return resultOrm, nil
 }
