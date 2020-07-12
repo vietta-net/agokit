@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package pb;
+option go_package =   "agokit/pb";
+
+message DateRange {
+  //Date From
+  google.protobuf.Timestamp from  = 1;
+  //Date To
+  google.protobuf.Timestamp to    = 2;
+  //Default field is created_at
+  string field                    = 3;
+}

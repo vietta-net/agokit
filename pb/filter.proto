@@ -1,6 +1,5 @@
 syntax = "proto3";
 
-import "google/protobuf/timestamp.proto";
 package pb;
 
 option go_package =   "agokit/pb";
@@ -14,11 +13,4 @@ message Filter{
   repeated string group = 3;
   //Max length 3
   repeated string type  = 4;
-  //Filter From Date to Date
-  DateRange date        = 5;
-}
-
-message DateRange {
-  google.protobuf.Timestamp from  = 1;
-  google.protobuf.Timestamp to    = 2;
 }

@@ -3,6 +3,8 @@ package pb;
 
 option go_package =   "agokit/pb";
 
+import "agokit/pb/daterange.proto";
+
 message Query{
     //Number of Items per page
     uint32 limit    = 1;
@@ -12,6 +14,8 @@ message Query{
     string keyword  = 3;
     //Order by string
     string order    =  4;
+    //Query multiple date fields
+    repeated DateRange dates = 5;
 }
 
 
