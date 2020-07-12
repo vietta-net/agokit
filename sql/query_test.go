@@ -10,7 +10,6 @@ import (
 	"time"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"github.com/guregu/null"
 	"github.com/satori/go.uuid"
 	"fmt"
 )
@@ -20,9 +19,6 @@ type User struct {
 	ID string `gorm:"primary_key;column:id;type:char;size:36;" json:"id"`
 	Username string `gorm:"column:username;type:varchar;size:30;" json:"name"`
 	Password string `gorm:"column:password;type:varchar;size:32;" json:"name"`
-	CreatedAt time.Time `gorm:"column:created_at;type:datetime;" json:"created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at;type:datetime;" json:"updated_at"`
-	DeletedAt null.Time `gorm:"column:deleted_at;type:datetime;" json:"deleted_at"`
 }
 
 func TestBuildWhereDateRange(t *testing.T) {
