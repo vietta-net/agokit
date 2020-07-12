@@ -10,10 +10,6 @@ import (
 	"math"
 	"strings"
 	"time"
-
-
-	"google.golang.org/protobuf/types/known/timestamppb"
-
 )
 
 //Dynamic filter with multiple field with single value
@@ -106,27 +102,27 @@ func BuildWhereDateRange(resultOrm *gorm.DB, d *pb.DateRange, timezone string) (
 		return resultOrm, nil
 	}
 
-	loc, err := time.LoadLocation(timezone)
 	if err != nil {
 		return resultOrm, errors.E(codes.Unknown, "Timezone", err)
 	}
 
-	if d.From == nil {
-		d.From = timestamppb.New(time.Unix(0,0))
-	}
-	if d.To == nil {
-		d.To = timestamppb.New(time.Now().UTC())
-	}
-
-	if d.To.AsTime().IsZero() && d.From.AsTime().IsZero() {
+	if d.To.Seconds == 0 && d.From.Seconds ==0 {
 		return resultOrm, nil
 	}
 
-	if d.To.AsTime().IsZero() {
-		d.To = timestamppb.New(time.Now().UTC())
+	loc, err := time.LoadLocation(timezone)
+	var from = time.Time{}
+	var to = time.Now().UTC()
+
+	if d.From != nil {
+		from = time.Unix(d.From.Seconds, int64(d.From.Nanos))
 	}
 
-	if d.From.AsTime().Unix() > d.To.AsTime().Unix() {
+	if d.To != nil {
+		to = time.Unix(d.To.Seconds, int64(d.To.Nanos))
+	}
+
+	if from.Unix() > to.Unix() {
 		return resultOrm, errors.E(
 			codes.InvalidArgument, "Date",
 			map[string]string{
@@ -135,9 +131,9 @@ func BuildWhereDateRange(resultOrm *gorm.DB, d *pb.DateRange, timezone string) (
 		)
 	}
 
-	dateFrom = d.From.AsTime().In(loc).String()
+	dateFrom = from.In(loc).String()
 	//Add one day
-	dateTo 	 = d.To.AsTime().In(loc).Add(time.Hour * 24).String()
+	dateTo 	 = to.In(loc).Add(time.Hour * 24).String()
 
 	resultOrm = resultOrm.Where("`created_at` >= ? AND `created_at` < ?", dateFrom, dateTo)
 

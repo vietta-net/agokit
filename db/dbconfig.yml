@@ -1,0 +1,5 @@
+development:
+  dialect: mysql
+  datasource: dev:passw0rd@tcp(127.0.0.1:3306)/dev?parseTime=true&charset=utf8mb4
+  dir: migrations/mysql
+  table: migrations

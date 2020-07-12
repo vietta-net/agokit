@@ -1,4 +1,4 @@
-package auth
+package auth_test
 
 import (
 	stdjwt "github.com/dgrijalva/jwt-go"
@@ -7,14 +7,15 @@ import (
 	"context"
 	"testing"
 	"github.com/stretchr/testify/assert"
+	"github.com/vietta-net/agokit/auth"
+
 )
-
 var (
-
 	secret = "7412ea46fc23a86b96e5f3eb192ad280"
 )
 
 func TestUser(t *testing.T) {
+
 	ctx := SetContext()
 	var kid = "kid-header"
 	token := stdjwt.NewWithClaims(stdjwt.SigningMethodHS256, stdjwt.StandardClaims{})
@@ -27,7 +28,7 @@ func TestUser(t *testing.T) {
 	ctx = context.WithValue(ctx, jwt.JWTTokenContextKey, tokenString)
 
 
-	user := LoadUserFromContext(ctx)
+	user := auth.LoadUserFromContext(ctx)
 	t.Run("GetUserName", func(t *testing.T) {
 		assert.Equal(t, user.GetUserName(), "pntn79")
 	})
@@ -43,6 +44,8 @@ func TestUser(t *testing.T) {
 }
 
 func SetContext()(ctx context.Context){
+
+
 	ctx = context.Background()
 
 	/*
