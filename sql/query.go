@@ -2,35 +2,50 @@ package sql
 
 import (
 	"github.com/vietta-net/agokit/helper"
+	"github.com/vietta-net/agokit/errors"
+	"github.com/vietta-net/agokit/pb"
 	"fmt"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"google.golang.org/grpc/codes"
 	"math"
 	"strings"
+	"time"
+
+
+	"google.golang.org/protobuf/types/known/timestamppb"
+
 )
 
 //Dynamic filter with multiple field with single value
-func BuildWhereFilter(resultOrm *gorm.DB, filter interface{}) ( *gorm.DB){
+func BuildWhereFilter(resultOrm *gorm.DB, filter interface{}) ( *gorm.DB, error){
 	var data = make(map[string]interface{})
 	//Convert Struct to map
-	helper.Convert(filter,  &data)
+	err := helper.Convert(filter,  &data)
 
-	var where = make(map[string]interface{})
+	if err != nil {
+		return resultOrm, errors.E(codes.Unknown, "Convert", err)
+	}
 
 	for field, value := range data {
-		//Check field if it has value
-		if value != "" {
-			//Convert to lower case to map with db field name in lower case
-			field = strings.ToLower(field)
-			where[field] = value
+		//Convert to lower case to map with db field name in lower case
+		field = strings.ToLower(field)
+
+		switch value := value.(type) {
+		case string:
+			//Check field if it has value
+			if value != "" {
+				field = fmt.Sprintf("`%s` = ?", field)
+				resultOrm = resultOrm.Where(field, value)
+			}
+		case []interface{}:
+			if len(value) > 0 {
+				field = fmt.Sprintf("`%s` IN (?)", field)
+				resultOrm = resultOrm.Where(field, value)
+			}
 		}
 	}
-	//Add where only it has conditions
-	if len(where) > 0{
-		resultOrm = resultOrm.Where(where)
-	}
 
-	return resultOrm
+	return resultOrm, nil
 }
 
 //Dynamic Search in multiple fields
@@ -80,4 +95,51 @@ func GetPagination(resultOrm *gorm.DB, currentPage uint32, limit uint32) (interf
 		}
 	}
 	return p, err
+}
+
+
+func BuildWhereDateRange(resultOrm *gorm.DB, d *pb.DateRange, timezone string) ( *gorm.DB, error) {
+	var err error = nil
+	var dateFrom = ""
+	var dateTo = ""
+	if d == nil || (d.From ==nil &&  d.To == nil) {
+		return resultOrm, nil
+	}
+
+	loc, err := time.LoadLocation(timezone)
+	if err != nil {
+		return resultOrm, errors.E(codes.Unknown, "Timezone", err)
+	}
+
+	if d.From == nil {
+		d.From = timestamppb.New(time.Unix(0,0))
+	}
+	if d.To == nil {
+		d.To = timestamppb.New(time.Now().UTC())
+	}
+
+	if d.To.AsTime().IsZero() && d.From.AsTime().IsZero() {
+		return resultOrm, nil
+	}
+
+	if d.To.AsTime().IsZero() {
+		d.To = timestamppb.New(time.Now().UTC())
+	}
+
+	if d.From.AsTime().Unix() > d.To.AsTime().Unix() {
+		return resultOrm, errors.E(
+			codes.InvalidArgument, "Date",
+			map[string]string{
+				"date":"Date From should be less than or equal Date To",
+			},
+		)
+	}
+
+	dateFrom = d.From.AsTime().In(loc).String()
+	//Add one day
+	dateTo 	 = d.To.AsTime().In(loc).Add(time.Hour * 24).String()
+
+	resultOrm = resultOrm.Where("`created_at` >= ? AND `created_at` < ?", dateFrom, dateTo)
+
+	return resultOrm, nil
 }
