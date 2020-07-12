@@ -115,7 +115,6 @@ func BuildWhereDateRange(resultOrm *gorm.DB, date interface{}, timezone string) 
 	d := pb.DateRange{}
 
 	err = helper.Convert(date, &d)
-
 	if err != nil {
 		return resultOrm, errors.E(codes.Unknown, "Convert", err)
 	}
@@ -128,29 +127,33 @@ func BuildWhereDateRange(resultOrm *gorm.DB, date interface{}, timezone string) 
 		return resultOrm, errors.E(codes.Unknown, "Timezone", err)
 	}
 
-	if d.To.Seconds == 0 && d.From.Seconds ==0 {
+	if d.To.Seconds <= 0 && d.From.Seconds <=0 {
 		return resultOrm, nil
 	}
 
-	loc, err := time.LoadLocation(timezone)
-	var from = time.Time{}
-	var to = time.Now().UTC()
-
-	if d.From != nil {
-		from = time.Unix(d.From.Seconds, int64(d.From.Nanos))
+	if d.To.Seconds < 0  {
+		d.To.Seconds = time.Now().UTC().Unix()
 	}
 
-	if d.To != nil {
-		to = time.Unix(d.To.Seconds, int64(d.To.Nanos))
-	}
-
-	if from.Unix() > to.Unix() {
+	if d.To.Seconds < d.From.Seconds {
 		return resultOrm, errors.E(
 			codes.InvalidArgument, "Date",
 			map[string]string{
 				"date":"Date From should be less than or equal Date To",
 			},
 		)
+	}
+
+	loc, err := time.LoadLocation(timezone)
+	var from = time.Time{}
+	var to = time.Now().UTC()
+
+	if d.From.Seconds > 0 {
+		from = time.Unix(d.From.Seconds, int64(d.From.Nanos))
+	}
+
+	if d.To.Seconds > 0 {
+		to = time.Unix(d.To.Seconds, int64(d.To.Nanos))
 	}
 
 	dateFrom = from.In(loc).String()
