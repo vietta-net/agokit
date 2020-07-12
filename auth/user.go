@@ -19,6 +19,10 @@ type user struct {
 	FullName string
 }
 
+func NewUser() User {
+	return &user{}
+}
+
 func (u user) GetUserName() string {
 	return u.Username
 }

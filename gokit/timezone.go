@@ -1,4 +1,4 @@
-package sql
+package gokit
 
 import (
 	"context"
@@ -6,16 +6,22 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-const TimezoneKey = "timezone"
+const TimezoneKey 	= "timezone"
+var ServerTimezone 	= "Asia/Ho_Chi_Minh"
 
-func TimezoneToContext(timezone *string) grpctransport.ServerRequestFunc {
+func TimezoneToContext(timezone string) grpctransport.ServerRequestFunc {
+	if timezone != "" {
+		ServerTimezone = timezone
+	}
 	return func(ctx context.Context, md metadata.MD) context.Context {
 		// capital "Key" is illegal in HTTP/2.
 		timezone, ok := md[TimezoneKey]
-		if !ok {
-			return ctx
+		tz := ServerTimezone
+		if ok {
+			tz = timezone[0]
 		}
-		ctx = context.WithValue(ctx, TimezoneKey, timezone)
+
+		ctx = context.WithValue(ctx, TimezoneKey, tz)
 		return ctx
 	}
 }
