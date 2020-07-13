@@ -89,6 +89,8 @@ func GetPagination(resultOrm *gorm.DB, currentPage uint32, limit uint32) (interf
 		}else{
 			p.Pages = pageTotal
 		}
+	}else{
+		p = &Pagination{}
 	}
 	return p, err
 }
