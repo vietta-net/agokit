@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	stdlog "log"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
@@ -215,5 +216,10 @@ func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
 		c.Com.DB.Database, c.Com.DB.ParseTime, c.Com.DB.Charset)
 	db, err = gorm.Open("mysql", dataSource)
 	c.Bb = db
-	return db, err
+	if err != nil {
+		return db, err
+	}
+
+	return db, nil
+
 }

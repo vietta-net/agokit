@@ -1,5 +1,7 @@
 #!/bin/sh
 
+cd ..
+
 #Get the highest tag number
 #VERSION=`git describe --abbrev=0 --tags`
 VERSION=`git ls-remote --tags --refs --sort="version:refname" git://github.com/vietta-net/agokit.git | awk -F/ 'END{print$NF}'`

@@ -45,3 +45,14 @@ jobs:
           name: Test
           command: |
             go test -v -cover ./...
+      - add_ssh_keys:
+          fingerprints:
+            - "ea:f3:d3:dd:56:60:7b:6f:6c:10:cf:cd:72:bf:a3:d8"
+      - run:
+          name: Release Tag
+          command: |
+            git config --global user.email "pntn79@gmail.com"
+            git config --global user.name "Brian Pham"
+            chmod +x /go/src/agokit/scripts/auto-tag.sh
+            cd /go/src/agokit/scripts
+            ./auto-tag.sh
