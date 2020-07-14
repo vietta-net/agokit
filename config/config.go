@@ -3,7 +3,6 @@ package config
 import (
 	"flag"
 	"fmt"
-	stdlog "log"
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/metrics"
 	kitprometheus "github.com/go-kit/kit/metrics/prometheus"
