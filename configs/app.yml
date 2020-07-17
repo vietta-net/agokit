@@ -1,0 +1,12 @@
+name: agokit
+service: test
+version: v1
+env: dev
+debug: true
+basepath: ./
+mode: 1
+language: vi
+timezone: Asia/Ho_Chi_Minh
+secret: 7412ea46fc23a86b96e5f3eb192ad280
+acceptLanguage: en, en-US, vi
+

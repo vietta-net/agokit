@@ -19,6 +19,7 @@ import (
 	"sourcegraph.com/sourcegraph/appdash"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"strconv"
 )
 
 type Config interface {
@@ -28,15 +29,141 @@ type Config interface {
 
 //New Config is  to set params
 func New(basePath string) (Config , error){
-
 	c := BasicConfig{}
-	flag.UintVar(&c.Arg.Mode, "mode", 0, "Mode")
-	flag.StringVar(&c.Arg.BasePath, "base-path", basePath, "Base Path")
-	flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%s/configs", basePath), "Config Path")
-	flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%s/languages", basePath), "Language Path")
-	flag.Parse()
+
+
+
+	if os.Getenv("APP_TEST") == ""{
+		flag.UintVar(&c.Arg.Mode, "mode", 0, "Mode")
+		flag.StringVar(&c.Arg.BasePath, "base-path", basePath, "Base Path")
+		flag.StringVar(&c.Arg.ConfigPath, "config-path", fmt.Sprintf("%s/configs", basePath), "Config Path")
+		flag.StringVar(&c.Arg.LanguagePath, "language-path", fmt.Sprintf("%s/languages", basePath), "Language Path")
+		flag.Parse()
+	}else{
+		c.Arg.BasePath = basePath
+		c.Arg.ConfigPath  = fmt.Sprintf("%s/configs", basePath)
+		c.Arg.LanguagePath = fmt.Sprintf("%s/languages", basePath)
+	}
+
 	c.App.BasePath = c.Arg.BasePath
 	err:= c.Load()
+
+	if os.Getenv("APP_PREFIX") != "" {
+		viper.SetEnvPrefix(os.Getenv("APP_PREFIX"))
+	}
+	// Enable VIPER to read Environment Variables
+	viper.AutomaticEnv()
+	//NAME string
+	if str :=  viper.GetString("NAME");  str != "" {
+		c.App.Name = str
+	}
+	//SERVICE  string
+	if str :=  viper.GetString("SERVICE");  str != "" {
+		c.App.Service = str
+	}
+	//VERSION string
+	if str :=  viper.GetString("VERSION");  str != "" {
+		c.App.Version = str
+	}
+	//MODE  uint8
+	if iVar, err := strconv.ParseInt(viper.GetString("MODE"), 10, 16) ;  err == nil && iVar > 0 {
+		c.App.Mode = uint8(iVar)
+	}
+	//TIMEZONE string
+	if str :=  viper.GetString("TIMEZONE");  str != "" {
+		c.App.Timezone = str
+	}
+	//ENV string
+	if str :=  viper.GetString("ENV");  str != "" {
+		c.App.Env = str
+	}
+	//JWT_SECRET string
+	if str :=  viper.GetString("JWT_SECRET");  str != "" {
+		c.App.Secret = str
+	}
+	//BASE_PATH string
+	if str :=  viper.GetString("BASE_PATH");  str != "" {
+		c.App.BasePath = str
+		c.Arg.BasePath = str
+	}
+	//CONFIG_PATH string
+	if str :=  viper.GetString("CONFIG_PATH");  str != "" {
+		c.Arg.ConfigPath = str
+	}
+	//LANGUAGE_PATH string
+	if str :=  viper.GetString("LANGUAGE_PATH");  str != "" {
+		c.Arg.LanguagePath = str
+	}
+	//DB_DIALECT  string
+	if str :=  viper.GetString("DB_DIALECT");  str != "" {
+		c.Com.DB.Dialect = str
+	}
+	//DB_HOST string
+	if str :=  viper.GetString("DB_HOST");  str != "" {
+		c.Com.DB.Host = str
+	}
+	//DB_PORT uint16
+	if iVar, err := strconv.ParseUint(viper.GetString("DB_PORT"), 10, 64) ;  err == nil && iVar > 0 {
+		c.Com.DB.Port = uint16(iVar)
+	}
+	//DB_DATABASE string
+	if str :=  viper.GetString("DB_DATABASE");  str != "" {
+		c.Com.DB.Database = str
+	}
+	//DB_USER string
+	if str :=  viper.GetString("DB_USER");  str != "" {
+		c.Com.DB.Username = str
+	}
+	//DB_PASSWORD string
+	if str :=  viper.GetString("DB_PASSWORD");  str != "" {
+		c.Com.DB.Password = str
+	}
+	//GRPC_PORT uint16
+	if iVar, err := strconv.ParseUint(viper.GetString("GRPC_PORT"), 10, 64) ;  err == nil && iVar > 0 {
+		c.Com.Grpc.Port = uint16(iVar)
+	}
+
+	//DEBUG_PORT uint16
+	if iVar, err := strconv.ParseUint(viper.GetString("DEBUG_PORT"), 10, 64) ;  err == nil && iVar > 0 {
+		c.Com.Debug.Port = uint16(iVar)
+	}
+	//REST_PORT  uint16
+	if iVar, err := strconv.ParseUint(viper.GetString("REST_PORT"), 10, 64) ;  err == nil && iVar > 0 {
+		c.Com.Rest.Port = uint16(iVar)
+	}
+	//REST_BASE_URL string
+	if str :=  viper.GetString("REST_BASE_URL");  str != "" {
+		c.Com.Rest.BaseUrl = str
+	}
+	//ZIPKIN_HOST string
+	if str :=  viper.GetString("ZIPKIN_HOST");  str != "" {
+		c.Com.Zipkin.Host = str
+	}
+	//ZIPKIN_API string
+	if str :=  viper.GetString("ZIPKIN_API");  str != "" {
+		c.Com.Zipkin.Api = str
+	}
+	//ZIPKIN_PORT uint16
+	if iVar, err := strconv.ParseUint(viper.GetString("ZIPKIN_PORT"), 10, 64) ;  err == nil && iVar > 0 {
+		c.Com.Zipkin.Port = uint16(iVar)
+	}
+	//ZIPKIN_BRIDGE bool
+	if bVar, err := strconv.ParseBool(viper.GetString("ZIPKIN_BRIDGE")) ;  err == nil && bVar {
+		c.Com.Zipkin.Bridge = bVar
+	}
+	//LIGHTSTEP_TOKEN string
+	if str :=  viper.GetString("LIGHTSTEP_TOKEN");  str != "" {
+		c.Com.Lightstep.Token = str
+	}
+	//APPDASHOT_HOST string
+	if str :=  viper.GetString("APPDASHOT_HOST");  str != "" {
+		c.Com.Appdashot.Host = str
+	}
+	//APPDASHOT_PORT uint16
+	if iVar, err := strconv.ParseUint(viper.GetString("APPDASHOT_PORT"), 10, 64) ;  err == nil && iVar > 0 {
+		c.Com.Appdashot.Port = uint16(iVar)
+	}
+
 	return &c, err
 }
 
@@ -46,7 +173,6 @@ type BasicConfig struct {
 	Com Component
 	Mws Middlewares
 	Bb  *gorm.DB
-
 }
 
 func FileExists(filename string) bool {
@@ -66,10 +192,12 @@ func (c *BasicConfig) Load() ( error ){
 	viper.SetConfigName("app.yml")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(c.Arg.ConfigPath)
+
 	err := viper.ReadInConfig()
 	if err != nil {
 		return err
 	}
+
 	err = viper.Unmarshal(&c.App)
 
 	file := fmt.Sprintf("%s-com.yml",c.App.Env )

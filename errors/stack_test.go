@@ -3,7 +3,7 @@ package errors
 import (
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	require "github.com/stretchr/testify/assert"
 )
 
 func TestUnMarshal(t *testing.T) {

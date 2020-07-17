@@ -1,0 +1,39 @@
+db:
+  dialect: mysql
+  host: 127.0.0.1
+  port: 3306
+  username: dev
+  password: passw0rd
+  database: dev
+  charset: utf8mb4
+  parsetime: true
+grpc:
+  host: 127.0.0.1
+  port: 64000
+rest:
+  host: 127.0.0.1
+  port: 9411
+  baseurl: /
+nats:
+  host: 127.0.0.1
+  port: 4222
+zipkin:
+  host: 127.0.0.1
+  port: 9411
+  api: /api/v2/spans
+  bridge: false
+appdashot:
+  host: 127.0.0.1
+  port: 7701
+debug:
+  path: /metrics
+  port: 8082
+lightstep:
+  token: "qwGhhVHrP6gISuWFfND5G+WL6ldQsDgpjNRBSoHBMx2qvNSR5hUM08t6hUVOG5tr4qh27VgYIwI7t4FuQNkVSfKKfJ277A70fvVO9hK2"
+smtp:
+  host: smtp.gmail.com
+  username: abc123
+  password: 12345678
+  port: 587
+  encryption: tls
+  authentication: true

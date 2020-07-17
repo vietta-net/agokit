@@ -2,6 +2,7 @@ package config
 
 type Component struct {
 	DB struct {
+		Dialect   string `yaml:"dialect"`
 		Host      string `yaml:"host"`
 		Port      uint16 `yaml:"port"`
 		Username  string `yaml:"username"`
@@ -19,7 +20,7 @@ type Component struct {
 	Rest struct {
 		Host      string `yaml:"host"`
 		Port      uint16 `yaml:"port"`
-		baseurl   string `yaml:"baseurl"`
+		BaseUrl   string `yaml:"baseurl"`
 	}
 
 	Zipkin struct {
