@@ -6,15 +6,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-const (
-	TimezoneKey 	= "timezone"
-	LanguageKey		= "content-language"
-)
 
-var (
-	ServerTimezone 	= "Asia/Ho_Chi_Minh"
-	DefaultLanguage = "en"
-)
 
 
 func TimezoneToContext(timezone string) grpctransport.ServerRequestFunc {
@@ -39,11 +31,3 @@ func GetTimezoneFromContext(ctx context.Context) string {
 	return tz.(string)
 }
 
-func GetLanguageFromContext(ctx context.Context) string {
-	lang := ctx.Value(LanguageKey)
-	l := lang.(string)
-	if l == ""{
-		l = DefaultLanguage
-	}
-	return l
-}
