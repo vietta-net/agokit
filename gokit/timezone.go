@@ -28,6 +28,9 @@ func TimezoneToContext(timezone string) grpctransport.ServerRequestFunc {
 
 func GetTimezoneFromContext(ctx context.Context) string {
 	tz := ctx.Value(TimezoneKey)
-	return tz.(string)
+	if tz != nil{
+		return tz.(string)
+	}
+	return ServerTimezone
 }
 
