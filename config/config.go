@@ -13,6 +13,7 @@ import (
 	stdprometheus "github.com/prometheus/client_golang/prometheus"
 	"github.com/spf13/viper"
 	"github.com/vietta-net/agokit/i18n"
+	"net/url"
 	"os"
 	appdashot "sourcegraph.com/sourcegraph/appdash/opentracing"
 	"github.com/lightstep/lightstep-tracer-go"
@@ -337,16 +338,18 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 }
 
 func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=%s&charset=%s",
-		c.Com.DB.Username, c.Com.DB.Password,
-		c.Com.DB.Host, c.Com.DB.Port,
-		c.Com.DB.Database, c.Com.DB.ParseTime, c.Com.DB.Charset)
-	db, err = gorm.Open("mysql", dataSource)
-	c.Bb = db
-	if err != nil {
-		return db, err
-	}
+	args := fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?parseTime=%s&charset=%s&loc=",
+		c.Com.DB.Username,
+		c.Com.DB.Password,
+		c.Com.DB.Host,
+		c.Com.DB.Port,
+		c.Com.DB.Database,
+		c.Com.DB.ParseTime,
+		c.Com.DB.Charset,
+		url.QueryEscape(c.App.Timezone),
+		)
+	c.Bb, err = InitGORM(c.Com.DB.Dialect, args)
 
-	return db, nil
-
+	return c.Bb, err
 }
