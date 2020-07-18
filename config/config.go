@@ -339,7 +339,7 @@ func (c *BasicConfig) LoadMiddlewares() (mws Middlewares) {
 
 func (c *BasicConfig) LoadDB() (db *gorm.DB, err error) {
 	args := fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?parseTime=%s&charset=%s&loc=",
+		"%s:%s@tcp(%s:%d)/%s?parseTime=%s&charset=%s&loc=%s",
 		c.Com.DB.Username,
 		c.Com.DB.Password,
 		c.Com.DB.Host,
