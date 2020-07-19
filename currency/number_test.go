@@ -4,7 +4,7 @@ import (
 	"github.com/leekchan/accounting"
 	"testing"
 	"github.com/stretchr/testify/assert"
-	"github.com/vietta-net/agokit/number"
+	"github.com/vietta-net/agokit/currency"
 )
 
 func TestNumber(t *testing.T) {
@@ -12,7 +12,7 @@ func TestNumber(t *testing.T) {
 	t.Run("Positive", func(t *testing.T) {
 		var lang = "vi"
 		var  locale *accounting.Locale
-		locale, err := number.GetLocale(lang)
+		locale, err := currency.GetLocale(lang)
 		assert.Nil(t, err)
 		assert.NotNil(t, locale)
 		assert.Equal(t, ".", locale.ThouSep)
@@ -26,35 +26,35 @@ func TestNumber(t *testing.T) {
 
 	t.Run("Nagetive", func(t *testing.T) {
 		var lang = "afafd"
-		locale, err := number.GetLocale(lang)
+		locale, err := currency.GetLocale(lang)
 		assert.Error(t, err)
 		assert.Nil(t, locale)
 	})
 
 	t.Run("Parse-Minnus", func(t *testing.T) {
 		var lang = "vi"
-		locale, err := number.GetLocale(lang)
+		locale, err := currency.GetLocale(lang)
 		assert.Nil(t, err)
 		assert.NotNil(t, locale)
 
-		var str = number.ParseByLocale (locale, "-(45.000,50)VND")
+		var str = currency.ParseByLocale (locale, "-(45.000,50)VND")
 		assert.Equal(t, "-45000.50", str)
 	})
 
 	t.Run("Parse-Positive", func(t *testing.T) {
 		var lang = "vi"
-		locale, err := number.GetLocale(lang)
+		locale, err := currency.GetLocale(lang)
 		assert.Nil(t, err)
 		assert.NotNil(t, locale)
 
-		var str = number.ParseByLocale (locale, "đ45.000,50")
+		var str = currency.ParseByLocale (locale, "đ45.000,50")
 		assert.Equal(t, "45000.50", str)
 	})
 
 	t.Run("ParseFromLangue", func(t *testing.T) {
 		var lang = "vi"
 		var str =  "đ45.000,50"
-		val, err := number.Parse(lang, str)
+		val, err := currency.Parse(lang, str)
 		assert.Nil(t, err)
 		assert.Equal(t, "45000.50", val)
 	})
@@ -62,7 +62,7 @@ func TestNumber(t *testing.T) {
 	t.Run("ParseAndRevert", func(t *testing.T) {
 		var lang = "vi"
 		var str =  "₫ 45.000,50"
-		val, err := number.Parse(lang, str)
+		val, err := currency.Parse(lang, str)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "45000.50", val)
@@ -72,7 +72,7 @@ func TestNumber(t *testing.T) {
 	t.Run("FormatNumber", func(t *testing.T) {
 		var lang = "vi"
 		var str =  45000.50
-		val, err := number.Format(lang, str)
+		val, err := currency.Format(lang, str)
 
 		assert.Nil(t, err)
 		assert.Equal(t, "₫45.000,50", val)
