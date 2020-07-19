@@ -19,7 +19,7 @@ func TestNumber(t *testing.T) {
 		assert.Equal(t, ",", locale.DecSep)
 		assert.Equal(t, "VND", locale.Name)
 		assert.Equal(t, "₫", locale.ComSymbol)
-		assert.Equal(t, true, locale.Pre)
+		assert.Equal(t, false, locale.Pre)
 		assert.Equal(t, 2, locale.FractionLength)
 		assert.Equal(t, "", locale.SpaceSep)
 	})
@@ -75,6 +75,6 @@ func TestNumber(t *testing.T) {
 		val, err := currency.Format(lang, str)
 
 		assert.Nil(t, err)
-		assert.Equal(t, "₫45.000,50", val)
+		assert.Equal(t, "45.000,50₫", val)
 	})
 }

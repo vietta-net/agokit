@@ -37,5 +37,9 @@ func GetLocale(lang string) (*accounting.Locale, error ){
 		Pre: true,
 	}
 
+	if  lang == "vi" {
+		lc.Pre = false
+	}
+
 	return lc, nil
 }
