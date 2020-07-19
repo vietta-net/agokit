@@ -7,7 +7,7 @@ import (
 	"github.com/vietta-net/agokit/currency"
 )
 
-func TestNumber(t *testing.T) {
+func TestCurrency(t *testing.T) {
 
 	t.Run("Positive", func(t *testing.T) {
 		var lang = "vi"
