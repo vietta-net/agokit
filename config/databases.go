@@ -13,7 +13,7 @@ const (
 	// timeout defines the sleep duration between each connection retry.
 	timeout = 5 * time.Second
 
-	// retry defines the number of times to retry.
+	// retry defines the currency of times to retry.
 	retry = 3
 )
 

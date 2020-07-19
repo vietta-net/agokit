@@ -1,4 +1,4 @@
-package number
+package currency
 
 import (
 	"fmt"
@@ -25,13 +25,13 @@ func GetAccounting(lc *accounting.Locale) *accounting.Accounting {
 	return ac
 }
 
-//Format number based on Locale
+//Format currency based on Locale
 func FormatByLocale(lc *accounting.Locale, number interface{}) string {
 	ac := GetAccounting(lc)
 	return FormatByAccounting(ac, number)
 }
 
-//Convert number to string based on Locale
+//Convert currency to string based on Locale
 func Format(lang string, number interface{}) ( string, error ) {
 	locale, err := GetLocale(lang)
 	if err != nil {

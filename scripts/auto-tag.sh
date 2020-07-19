@@ -2,12 +2,12 @@
 
 cd ..
 
-#Get the highest tag number
+#Get the highest tag currency
 #VERSION=`git describe --abbrev=0 --tags`
 VERSION=`git ls-remote --tags --refs --sort="version:refname" git://github.com/vietta-net/agokit.git | awk -F/ 'END{print$NF}'`
 VERSION=${VERSION:-'0.1.0'}
 
-#Get number parts
+#Get currency parts
 MAJOR="${VERSION%%.*}"; VERSION="${VERSION#*.}"
 MINOR="${VERSION%%.*}"; VERSION="${VERSION#*.}"
 PATCH="${VERSION%%.*}"; VERSION="${VERSION#*.}"

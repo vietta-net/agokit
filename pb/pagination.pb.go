@@ -30,7 +30,7 @@ type Pagination struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	//A number of items are counted
+	//A currency of items are counted
 	Count uint32 `protobuf:"varint,1,opt,name=count,proto3" json:"count,omitempty"`
 	//Number of items per page
 	Limit uint32 `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`

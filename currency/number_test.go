@@ -1,4 +1,4 @@
-package number_test
+package currency_test
 
 import (
 	"github.com/leekchan/accounting"

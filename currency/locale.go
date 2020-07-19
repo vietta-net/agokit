@@ -1,4 +1,4 @@
-package number
+package currency
 
 import (
 	"github.com/leekchan/accounting"
