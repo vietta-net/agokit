@@ -4,11 +4,10 @@ go 1.14
 
 require (
 	github.com/BurntSushi/toml v0.3.1
-	github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-kit/kit v0.10.0
 	github.com/go-sql-driver/mysql v1.5.0
-	github.com/gogo/protobuf v1.3.1 // indirect
+	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/guregu/null v4.0.0+incompatible
 	github.com/jinzhu/gorm v1.9.14
